@@ -4,6 +4,156 @@ generator client {
 
 datasource db {
     provider = "postgresql"
-    url      = "postgresql://postgres:1sampai10@localhost:5432/ims_restructure"
+    url      = "postgresql://postgres:1sampai10@localhost:5432/composync_restructure"
 }
 
+model Beneficiaries {
+    id                          Int             @id                     @default(autoincrement())
+} 
+
+// Beneficiaries
+model BeneficiariesContract {
+    id                          Int             @id                     @default(autoincrement())
+    Code                        String          @db.VarChar(255)        @default("")
+    ContractNumber              String          @db.VarChar(255)        @default("")
+    ContractName                String          @db.VarChar(255)        @default("")
+    ContractDescription         String                                  @default("")
+    ContractCreated             DateTime                                @default(now())
+    ContractCompany             String          @db.VarChar(255)        @default("")
+    StartDate                   DateTime                                @default(now())
+    EndDate                     DateTime                                @default(now())
+    Company                     String          @db.VarChar(255)        @default("")
+    ApprovalStatus              Boolean                                 @default(false)
+    ActiveContractStatus        Boolean                                 @default(false)
+
+    IsActive                    Boolean                                 @default(true)
+    IsDeleted                   Boolean                                 @default(false)
+    CreatedAt                   DateTime                                @default(now())
+    UpdatedAt                   DateTime                                @default(now())
+}
+
+model BeneficiariesPersonal {
+    id                          Int             @id                     @default(autoincrement())
+    Code                        String          @db.VarChar(255)        @default("")
+    Nationality                 String          @db.VarChar(255)        @default("")
+    ID_Card_Number              String          @db.VarChar(255)        @default("")
+    Firstname                   String          @db.VarChar(255)        @default("")
+    Middlename                  String          @db.VarChar(255)        @default("")
+    Lastname                    String          @db.VarChar(255)        @default("")
+    Gender                      String          @db.Char(1)             @default("")
+    DateOfBirth                 DateTime                                @default(now())
+    DateOfDeath                 DateTime                                @default(now())
+    PhoneNumber                 String          @db.VarChar(255)        @default("")
+    Email                       String          @db.VarChar(255)        @default("")
+    EmailDocuments              String          @db.VarChar(255)        @default("")
+    ExternalCode                String          @db.VarChar(255)        @default("")
+    Controlled                  Boolean                                 @default(false)
+    HeldStatus                  Boolean                                 @default(false)
+    ClientCrossMethodStatus     Boolean                                 @default(false)
+    ClientCrossTo               String          @db.VarChar(255)        @default("")
+    RetentionDate               DateTime                                @default(now())
+    StartDate                   DateTime                                @default(now())
+    EndDate                     DateTime                                @default(now())
+    Notes                       String          @db.Text                @default("")
+
+    IsActive                    Boolean                                 @default(true)
+    IsDeleted                   Boolean                                 @default(false)
+    CreatedAt                   DateTime                                @default(now())
+    UpdatedAt                   DateTime                                @default(now())
+    
+    // territory relational
+    RelationAdministrationBeneficiaries RelationAdministrationBeneficiaries?
+    RelationWalltBeneficiaries RelationWalltBeneficiaries?
+}
+
+model BeneficiariesCompany {
+    id                          Int             @id                     @default(autoincrement())
+    CodeCompany                 String          @db.VarChar(255)        @default("")
+    CompanyName                 String          @db.VarChar(255)        @default("")
+    Controlled                  Boolean                                 @default(false)
+    Email                       String          @db.VarChar(255)        @default("")
+    Phonenumber                 String          @db.VarChar(255)        @default("")
+    StartDate                   DateTime                                @default(now())
+    EndDate                     DateTime                                @default(now())
+
+    IsActive                    Boolean                                 @default(true)
+    IsDeleted                   Boolean                                 @default(false)
+    CreatedAt                   DateTime                                @default(now())
+    UpdatedAt                   DateTime                                @default(now())
+
+    RelationAdministrationBeneficiaries RelationAdministrationBeneficiaries?
+    RelationWalltBeneficiaries RelationWalltBeneficiaries?
+}
+
+model BeneficiariesAdministration {
+    id                          Int             @id                     @default(autoincrement())
+    AdminDeal                   Boolean
+    AdminDealNetTerms           Boolean
+    AdminDealAdministered       Int
+    AdminDealNetRemainder       Boolean
+    AdminDealAdministrating     Boolean
+    ReceivedRate                Int
+    EffectiveRate               Int
+    AdministrationParticipationDealType String  @db.VarChar(255)
+
+    IsActive                    Boolean                                 @default(true)
+    IsDeleted                   Boolean                                 @default(false)
+    CreatedAt                   DateTime                                @default(now())
+    UpdatedAt                   DateTime                                @default(now())
+
+    RelationAdministrationBeneficiaries RelationAdministrationBeneficiaries?
+}
+
+model WalletInformation {
+    id                          Int             @id                     @default(autoincrement())
+    AccountingDays              String          @db.VarChar(255)        @default("")
+    TaxPercentage               Int
+    TaxType                     String          @db.VarChar(255)        @default("")
+    TaxNumber                   String          @db.VarChar(255)        @default("")
+    TaxExecptionOrSocialSecurity String         @db.VarChar(255)        @default("")
+    BankAccountEntryType        String          @db.VarChar(255)        @default("")
+    BankAccountISOTerritory     String          @db.VarChar(255)        @default("")
+    BankName                    String          @db.VarChar(255)        @default("")
+    BankAccountHolder           String          @db.VarChar(255)        @default("")
+    BankSpecialNotes            String
+    BankMainSortCode            String          @db.VarChar(255)        @default("")
+    BankAdditionalSortCode      String          @db.VarChar(255)        @default("")
+    BankAccountIsIBAN           String          @db.VarChar(255)        @default("")
+    BankAccountNumber           String          @db.VarChar(255)        @default("")
+    Bank                        String          @db.VarChar(255)        @default("")
+    TaxAmount                   Int
+    NPWP_Number                 String          @db.VarChar(255)        @default("")
+    Payment_Currency            String          @db.VarChar(255)        @default("")
+    PaymentStatus               Boolean                                 @default(false)
+    FaxNumber                   String          @db.VarChar(255)        @default("")
+    FrequencyPayment            String          @db.VarChar(255)        @default("")
+    MinimumPaymentAmount        Int
+
+    IsActive                    Boolean                                 @default(true)
+    IsDeleted                   Boolean                                 @default(false)
+    CreatedAt                   DateTime                                @default(now())
+    UpdatedAt                   DateTime                                @default(now())
+
+    RelationWalltBeneficiaries RelationWalltBeneficiaries?
+}
+
+// Beneficiaries Relation Table
+model RelationAdministrationBeneficiaries {
+    id                          Int             @id                     @default(autoincrement())
+    BCompany_ID                 Int             @unique                 @default(0)
+    BPersonal_ID                Int             @unique                 @default(0)
+    Administration_ID           Int             @unique                 @default(0)
+    AdministrationBeneficiaries BeneficiariesAdministration             @relation(fields: [Administration_ID], references: [id])
+    BeneficiariesPersonal       BeneficiariesPersonal                   @relation(fields: [BPersonal_ID], references: [id])
+    BeneficiariesCompany        BeneficiariesCompany                    @relation(fields: [BCompany_ID], references: [id])
+}
+
+model RelationWalltBeneficiaries {
+    id                          Int             @id                     @default(autoincrement())
+    BCompany_ID                 Int             @unique                 @default(0)
+    BPersonal_ID                Int             @unique                 @default(0)
+    Wallet_ID                   Int             @unique                 @default(0)
+    WalletInformation           WalletInformation                       @relation(fields: [Wallet_ID], references: [id])
+    BeneficiariesPersonal       BeneficiariesPersonal                   @relation(fields: [BPersonal_ID], references: [id])
+    BeneficiariesCompany        BeneficiariesCompany                    @relation(fields: [BCompany_ID], references: [id])
+}
