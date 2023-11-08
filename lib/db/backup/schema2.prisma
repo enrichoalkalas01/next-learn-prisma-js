@@ -1,0 +1,96 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = "postgresql://postgres:1sampai10@localhost:5432/ims_restructure"
+}
+
+// Beneficiaries Model
+model BeneficiariesPersonal {
+    id                          Int             @id @default(autoincrement())
+    Code                        String
+    IdCardNumber                String
+    Firstname                   String
+    Middlename                  String
+    Lastname                    String
+    Gender                      String
+    DataOfBirth                 DateTime
+    PhoneNumber                 String
+    Email                       String
+    CorrespondenceAddress       String
+    RT                          String
+    RW                          String
+    PostalCode                  String
+    NPWP_Number                 String
+    TaxAmount                   String
+    PaymentCurrency             String
+    Bank                        String
+    AccountName                 String
+    AccountNumber               String
+    PaymentStatus               String
+    Nationality                 String
+    RelationPersonalAndContract RelationPersonalAndContract[]
+    RelationPersonalAndHeirs    RelationPersonalAndHeirs[]
+}
+
+model BeneficiariesContractLegalDetails {
+    id                          Int             @id @default(autoincrement())
+    Code                        String
+    ContractNumber              String
+    Firstname                   String
+    Middlename                  String
+    Lastname                    String
+    Company                     String
+    StartDate                   DateTime
+    EndDate                     DateTime
+    RelationPersonalAndContract RelationPersonalAndContract[]
+    RelationCompanyAndContract  RelationCompanyAndContract[]
+    RelationPersonalAndHeirs    RelationPersonalAndHeirs[]
+}
+
+model BeneficiariesCompany {
+    id                          Int             @id @default(autoincrement())
+    Code                        String
+    CompanyName                 String
+    PhoneNumber                 String
+    Email                       String
+    CorrespondenceAddress       String
+    RT                          String
+    RW                          String
+    PostalCode                  String
+    NPWP_Number                 String
+    TaxAmount                   String
+    PaymentCurrency             String
+    Bank                        String
+    AccountName                 String
+    AccountNumber               String
+    PaymentStatus               String
+    RelationCompanyAndContract  RelationCompanyAndContract[]
+}
+
+// Relation Beneficiaries
+model RelationPersonalAndContract {
+    id                          Int             @id @default(autoincrement())
+    BeneficiPersonalId          Int
+    BeneficiContractLegalId     Int
+    BeneficiariesPersonal       BeneficiariesPersonal   @relation(fields: [BeneficiPersonalId], references: [id])
+    BeneficiariesContractLegalDetails   BeneficiariesContractLegalDetails   @relation(fields: [BeneficiContractLegalId], references: [id])
+}
+
+model RelationCompanyAndContract {
+    id                          Int             @id @default(autoincrement())
+    BeneficiCompanyId           Int
+    BeneficiContractLegalId     Int
+    BeneficiariesCompany    BeneficiariesCompany    @relation(fields: [BeneficiCompanyId], references: [id])
+    BeneficiariesContractLegalDetails   BeneficiariesContractLegalDetails   @relation(fields: [BeneficiContractLegalId], references: [id])       
+}
+
+model RelationPersonalAndHeirs {
+    id                          Int            @id  @default(autoincrement())
+    PersonalId                  Int
+    HeirsId                     Int
+    PersonalBeneficiariesContractLegalDetails   BeneficiariesContractLegalDetails   @relation(fields: [PersonalId], references: [id])
+    Heirs                       BeneficiariesPersonal   @relation(fields: [HeirsId], references: [id])
+}

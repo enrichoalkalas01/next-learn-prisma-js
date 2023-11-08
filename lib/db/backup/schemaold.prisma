@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:1sampai10@localhost:5432/prisma_test"
+}
+
+model User {
+  id            Int         @id @default(autoincrement())
+  username      String    
+  password      String
+  email         String
+  phonenumber   String
+  Profile       Profile? // make trigger relation one to one in database
+  Content       Content[] // make trigger relation one to many in database
+}
+
+model Profile {
+  id            Int         @id @default(autoincrement())
+  firstname     String
+  lastname      String
+  fullname      String
+  address       String
+  postcode      String
+  userId        Int         @unique // must be unique for relation references
+  User          User        @relation(fields: [userId], references: [id]) // relation in database ( one to one )
+}
+
+model Content {
+  id            Int         @id @default(autoincrement())
+  title         String
+  excerpt       String
+  description   String
+  thumbnail     String
+  userId        Int         
+  User          User        @relation(fields: [userId], references: [id])
+}

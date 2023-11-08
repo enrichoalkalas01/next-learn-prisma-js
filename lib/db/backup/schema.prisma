@@ -1,0 +1,51 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = "postgresql://postgres:1sampai10@localhost:5432/ims_restructure"
+}
+
+model User {
+    id                      Int         @id @default(autoincrement())
+    username                String
+    password                String
+    email                   String
+    phonenumber             String
+}
+
+model Master_Performer {
+    id                      Int         @id @default(autoincrement())
+    performer_name          String
+    performer_type          String
+    debut_date              DateTime
+    SocialMediaRelation     SocialMediaRelation[]
+}
+
+model Social_Media {
+    id                      Int         @id @default(autoincrement())
+    facebook                String
+    instagram               String
+    spotify                 String
+    tiktok                  String
+    twitter                 String
+    youtube                 String
+    SocialMediaRelation     SocialMediaRelation[]
+}
+
+model SocialMediaRelation {
+    id                      Int         @id @default(autoincrement())
+    performer_id            Int
+    social_media_id         Int
+    Master_Performer        Master_Performer @relation(fields: [performer_id], references: [id])
+    Social_Media            Social_Media @relation(fields: [social_media_id], references: [id])
+}
+
+model Master_Song {
+    id                      Int         @id @default(autoincrement())
+    control                 Int         
+    iswc                    String
+    mme_id                  Int
+    original_artist         String
+}
