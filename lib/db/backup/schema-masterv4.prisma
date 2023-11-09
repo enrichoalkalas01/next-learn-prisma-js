@@ -1,0 +1,34 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = "postgresql://postgres:1sampai10@localhost:5432/ims_restructure"
+}
+
+model Master {
+    id                          Int             @id                     @default(autoincrement())
+}
+
+model Master_Performer {
+    id                          Int             @id                     @default(autoincrement())
+    ArtistName                  String?         @db.VarChar(255)
+    ArtistCode                  String?         @db.VarChar(255)
+    ArtistCreated               String?         @db.VarChar(255)
+    Label                       String?         @db.VarChar(255)
+    DebutDate                   String?         @db.VarChar(255)
+
+    // Add On
+    isActive                    Boolean                                 @default(true)
+    isDeleted                   Boolean                                 @default(false)
+    CreatedAt                   DateTime                                @default(now())
+    UpdatedAt                   DateTime                                @default(now())
+}
+
+model Master_Product {
+    id                          Int             @id                     @default(autoincrement())
+    SongTitle                   String          @db.VarChar(255)        
+}
+
+// Relation

@@ -1,159 +1,849 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = "postgresql://postgres:1sampai10@localhost:5432/composync_restructure"
+  provider = "postgresql"
+  url      = "postgresql://postgres:1sampai10@localhost:5432/ims_development_2"
 }
 
-model Beneficiaries {
-    id                          Int             @id                     @default(autoincrement())
-} 
-
-// Beneficiaries
-model BeneficiariesContract {
-    id                          Int             @id                     @default(autoincrement())
-    Code                        String          @db.VarChar(255)        @default("")
-    ContractNumber              String          @db.VarChar(255)        @default("")
-    ContractName                String          @db.VarChar(255)        @default("")
-    ContractDescription         String                                  @default("")
-    ContractCreated             DateTime                                @default(now())
-    ContractCompany             String          @db.VarChar(255)        @default("")
-    StartDate                   DateTime                                @default(now())
-    EndDate                     DateTime                                @default(now())
-    Company                     String          @db.VarChar(255)        @default("")
-    ApprovalStatus              Boolean                                 @default(false)
-    ActiveContractStatus        Boolean                                 @default(false)
-
-    IsActive                    Boolean                                 @default(true)
-    IsDeleted                   Boolean                                 @default(false)
-    CreatedAt                   DateTime                                @default(now())
-    UpdatedAt                   DateTime                                @default(now())
+model Claim_Composer_Tables {
+  id                    Int                    @id @default(autoincrement())
+  Claim_ID              Int?
+  Commposer_ID          Int?
+  createdAt             DateTime               @db.Timestamptz(6)
+  updatedAt             DateTime               @db.Timestamptz(6)
+  Master_Claim_Mains    Master_Claim_Mains?    @relation(fields: [Claim_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "CLAIM_ID")
+  Master_Composer_Mains Master_Composer_Mains? @relation(fields: [Commposer_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "COMPOSER_ID")
 }
 
-model BeneficiariesPersonal {
-    id                          Int             @id                     @default(autoincrement())
-    Code                        String          @db.VarChar(255)        @default("")
-    Nationality                 String          @db.VarChar(255)        @default("")
-    ID_Card_Number              String          @db.VarChar(255)        @default("")
-    Firstname                   String          @db.VarChar(255)        @default("")
-    Middlename                  String          @db.VarChar(255)        @default("")
-    Lastname                    String          @db.VarChar(255)        @default("")
-    Gender                      String          @db.Char(1)             @default("")
-    DateOfBirth                 DateTime                                @default(now())
-    DateOfDeath                 DateTime                                @default(now())
-    PhoneNumber                 String          @db.VarChar(255)        @default("")
-    Email                       String          @db.VarChar(255)        @default("")
-    EmailDocuments              String          @db.VarChar(255)        @default("")
-    ExternalCode                String          @db.VarChar(255)        @default("")
-    Controlled                  Boolean                                 @default(false)
-    HeldStatus                  Boolean                                 @default(false)
-    ClientCrossMethodStatus     Boolean                                 @default(false)
-    ClientCrossTo               String          @db.VarChar(255)        @default("")
-    RetentionDate               DateTime                                @default(now())
-    StartDate                   DateTime                                @default(now())
-    EndDate                     DateTime                                @default(now())
-    Notes                       String          @db.Text                @default("")
-
-    IsActive                    Boolean                                 @default(true)
-    IsDeleted                   Boolean                                 @default(false)
-    CreatedAt                   DateTime                                @default(now())
-    UpdatedAt                   DateTime                                @default(now())
-    
-    // territory relational
-    RelationAdministrationBeneficiaries RelationAdministrationBeneficiaries?
-    RelationWalltBeneficiaries RelationWalltBeneficiaries?
+model Client_Composer_Tables {
+  id                    Int                    @id @default(autoincrement())
+  Client_ID             Int?
+  Composer_ID           Int?
+  createdAt             DateTime               @db.Timestamptz(6)
+  updatedAt             DateTime               @db.Timestamptz(6)
+  Master_Client_Mains   Master_Client_Mains?   @relation(fields: [Client_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "CLIENT_ID")
+  Master_Composer_Mains Master_Composer_Mains? @relation(fields: [Composer_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "COMPOSER_ID")
 }
 
-model BeneficiariesCompany {
-    id                          Int             @id                     @default(autoincrement())
-    CodeCompany                 String          @db.VarChar(255)        @default("")
-    CompanyName                 String          @db.VarChar(255)        @default("")
-    Controlled                  Boolean                                 @default(false)
-    Email                       String          @db.VarChar(255)        @default("")
-    Phonenumber                 String          @db.VarChar(255)        @default("")
-    StartDate                   DateTime                                @default(now())
-    EndDate                     DateTime                                @default(now())
-
-    IsActive                    Boolean                                 @default(true)
-    IsDeleted                   Boolean                                 @default(false)
-    CreatedAt                   DateTime                                @default(now())
-    UpdatedAt                   DateTime                                @default(now())
-
-    RelationAdministrationBeneficiaries RelationAdministrationBeneficiaries?
-    RelationWalltBeneficiaries RelationWalltBeneficiaries?
+model Client_Song_Tables {
+  id                  Int                  @id @default(autoincrement())
+  Client_ID           Int?
+  Song_ID             Int?
+  createdAt           DateTime             @db.Timestamptz(6)
+  updatedAt           DateTime             @db.Timestamptz(6)
+  Master_Client_Mains Master_Client_Mains? @relation(fields: [Client_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "CLIENT_ID")
+  Master_Song_Mains   Master_Song_Mains?   @relation(fields: [Song_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "SONGS_ID")
 }
 
-model BeneficiariesAdministration {
-    id                          Int             @id                     @default(autoincrement())
-    AdminDeal                   Boolean
-    AdminDealNetTerms           Boolean
-    AdminDealAdministered       Int
-    AdminDealNetRemainder       Boolean
-    AdminDealAdministrating     Boolean
-    ReceivedRate                Int
-    EffectiveRate               Int
-    AdministrationParticipationDealType String  @db.VarChar(255)
-
-    IsActive                    Boolean                                 @default(true)
-    IsDeleted                   Boolean                                 @default(false)
-    CreatedAt                   DateTime                                @default(now())
-    UpdatedAt                   DateTime                                @default(now())
-
-    RelationAdministrationBeneficiaries RelationAdministrationBeneficiaries?
+model Contract_Client_Tables {
+  id                    Int                    @id @default(autoincrement())
+  Contract_ID           Int?
+  Client_ID             Int?
+  createdAt             DateTime               @db.Timestamptz(6)
+  updatedAt             DateTime               @db.Timestamptz(6)
+  Master_Client_Mains   Master_Client_Mains?   @relation(fields: [Client_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "CLIENT_ID")
+  Master_Contract_Mains Master_Contract_Mains? @relation(fields: [Contract_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "CONTRACT_ID")
 }
 
-model WalletInformation {
-    id                          Int             @id                     @default(autoincrement())
-    AccountingDays              String          @db.VarChar(255)        @default("")
-    TaxPercentage               Int
-    TaxType                     String          @db.VarChar(255)        @default("")
-    TaxNumber                   String          @db.VarChar(255)        @default("")
-    TaxExecptionOrSocialSecurity String         @db.VarChar(255)        @default("")
-    BankAccountEntryType        String          @db.VarChar(255)        @default("")
-    BankAccountISOTerritory     String          @db.VarChar(255)        @default("")
-    BankName                    String          @db.VarChar(255)        @default("")
-    BankAccountHolder           String          @db.VarChar(255)        @default("")
-    BankSpecialNotes            String
-    BankMainSortCode            String          @db.VarChar(255)        @default("")
-    BankAdditionalSortCode      String          @db.VarChar(255)        @default("")
-    BankAccountIsIBAN           String          @db.VarChar(255)        @default("")
-    BankAccountNumber           String          @db.VarChar(255)        @default("")
-    Bank                        String          @db.VarChar(255)        @default("")
-    TaxAmount                   Int
-    NPWP_Number                 String          @db.VarChar(255)        @default("")
-    Payment_Currency            String          @db.VarChar(255)        @default("")
-    PaymentStatus               Boolean                                 @default(false)
-    FaxNumber                   String          @db.VarChar(255)        @default("")
-    FrequencyPayment            String          @db.VarChar(255)        @default("")
-    MinimumPaymentAmount        Int
-
-    IsActive                    Boolean                                 @default(true)
-    IsDeleted                   Boolean                                 @default(false)
-    CreatedAt                   DateTime                                @default(now())
-    UpdatedAt                   DateTime                                @default(now())
-
-    RelationWalltBeneficiaries RelationWalltBeneficiaries?
+model Contract_Composer_Tables {
+  id                    Int                    @id @default(autoincrement())
+  Contract_ID           Int?
+  Composer_ID           Int?
+  createdAt             DateTime               @db.Timestamptz(6)
+  updatedAt             DateTime               @db.Timestamptz(6)
+  Master_Composer_Mains Master_Composer_Mains? @relation(fields: [Composer_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "COMPOSER_ID")
+  Master_Contract_Mains Master_Contract_Mains? @relation(fields: [Contract_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "CONTRACT_ID")
 }
 
-// Beneficiaries Relation Table
-model RelationAdministrationBeneficiaries {
-    id                          Int             @id                     @default(autoincrement())
-    BCompany_ID                 Int             @unique                 @default(0)
-    BPersonal_ID                Int             @unique                 @default(0)
-    Administration_ID           Int             @unique                 @default(0)
-    AdministrationBeneficiaries BeneficiariesAdministration             @relation(fields: [Administration_ID], references: [id])
-    BeneficiariesPersonal       BeneficiariesPersonal                   @relation(fields: [BPersonal_ID], references: [id])
-    BeneficiariesCompany        BeneficiariesCompany                    @relation(fields: [BCompany_ID], references: [id])
+model Label_Song_Tables {
+  id                Int                @id @default(autoincrement())
+  Label_ID          Int?
+  Song_ID           Int?
+  createdAt         DateTime           @db.Timestamptz(6)
+  updatedAt         DateTime           @db.Timestamptz(6)
+  Master_Labels     Master_Labels?     @relation(fields: [Label_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "LABEL_ID")
+  Master_Song_Mains Master_Song_Mains? @relation(fields: [Song_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "SONGS_ID")
 }
 
-model RelationWalltBeneficiaries {
-    id                          Int             @id                     @default(autoincrement())
-    BCompany_ID                 Int             @unique                 @default(0)
-    BPersonal_ID                Int             @unique                 @default(0)
-    Wallet_ID                   Int             @unique                 @default(0)
-    WalletInformation           WalletInformation                       @relation(fields: [Wallet_ID], references: [id])
-    BeneficiariesPersonal       BeneficiariesPersonal                   @relation(fields: [BPersonal_ID], references: [id])
-    BeneficiariesCompany        BeneficiariesCompany                    @relation(fields: [BCompany_ID], references: [id])
+model Master_Claim_Mains {
+  id                    Int                     @id @default(autoincrement())
+  CODE                  Int?
+  CONTROL               String?                 @db.VarChar(255)
+  MMEID                 String?                 @db.VarChar(255)
+  ARTIST                String?                 @db.VarChar(255)
+  SONG_TITLE            String?                 @db.VarChar(255)
+  ACTUAL                Float?
+  CHECK                 String?                 @db.VarChar(255)
+  MASSIVE               Float?
+  TOTAL                 Float?
+  COMP                  Float?
+  ID                    String?                 @db.VarChar(255)
+  TYPE                  String?                 @db.VarChar(255)
+  NAME                  String?                 @db.VarChar(255)
+  COMBINE               String?                 @db.VarChar(255)
+  PUBLISHER             String?                 @db.VarChar(255)
+  C_CONTROL             String?                 @db.VarChar(255)
+  COMPOSER              Float?
+  AUTHOR                Float?
+  RATIO                 Float?
+  CWR                   String?                 @db.VarChar(255)
+  createdAt             DateTime                @db.Timestamptz(6)
+  updatedAt             DateTime                @db.Timestamptz(6)
+  Claim_Composer_Tables Claim_Composer_Tables[]
+  Song_Claim_Tables     Song_Claim_Tables[]
+}
+
+model Master_Client_Mains {
+  id                     Int                      @id @default(autoincrement())
+  CODE                   Int?
+  NAME                   String?
+  SHARE                  Float?
+  START_DATE             String?                  @db.VarChar(255)
+  END_DATE               String?                  @db.VarChar(255)
+  CONTRACT_NUMBER        String?
+  CONTROLLED             String?                  @db.VarChar(255)
+  ID_NUMBER              String?                  @db.VarChar(255)
+  BIRTH_PLACE            String?                  @db.VarChar(255)
+  BIRTH_DATE             String?                  @db.VarChar(255)
+  DATE_OF_DEATH          String?                  @db.VarChar(255)
+  GENDER                 String?                  @db.VarChar(255)
+  RELIGION               String?                  @db.VarChar(255)
+  ADDRESS                String?
+  RT                     String?                  @db.VarChar(255)
+  RW                     String?                  @db.VarChar(255)
+  KELURAHAN_OR_DESA      String?                  @db.VarChar(255)
+  KECAMATAN              String?                  @db.VarChar(255)
+  KOTA_OR_KABUPATEN      String?                  @db.VarChar(255)
+  PROVINSI               String?                  @db.VarChar(255)
+  POSTAL_CODE            String?                  @db.VarChar(255)
+  CORRESPONDENCE_ADDRESS String?
+  C_RT                   String?                  @db.VarChar(255)
+  C_RW                   String?                  @db.VarChar(255)
+  C_KELURAHAN_OR_DESA    String?                  @db.VarChar(255)
+  C_KECAMATAN            String?                  @db.VarChar(255)
+  C_KOTA_OR_KABUPATEN    String?                  @db.VarChar(255)
+  C_PROVINSI             String?                  @db.VarChar(255)
+  C_POSTAL_CODE          String?                  @db.VarChar(255)
+  PHONE_NUMBER           String?                  @db.VarChar(255)
+  MOBILE_NUMBER          String?                  @db.VarChar(255)
+  EMAIL                  String?                  @db.VarChar(255)
+  BANK_NAME              String?                  @db.VarChar(255)
+  BRANCH                 String?                  @db.VarChar(255)
+  ACCOUNT_NUMBER         String?                  @db.VarChar(255)
+  ACCOUNT_NAME           String?                  @db.VarChar(255)
+  NPWP                   String?                  @db.VarChar(255)
+  NPPN                   String?                  @db.VarChar(255)
+  TAX                    String?                  @db.VarChar(255)
+  MUMA                   String?                  @db.VarChar(255)
+  createdAt              DateTime                 @db.Timestamptz(6)
+  updatedAt              DateTime                 @db.Timestamptz(6)
+  Client_Composer_Tables Client_Composer_Tables[]
+  Client_Song_Tables     Client_Song_Tables[]
+  Contract_Client_Tables Contract_Client_Tables[]
+}
+
+model Master_Composer_Mains {
+  id                        Int                         @id @default(autoincrement())
+  NO                        Int?
+  SOCIETY_NUM               String?                     @db.VarChar(255)
+  IPI_BASE                  String?                     @db.VarChar(255)
+  IPI_NUMBER                String?                     @db.VarChar(255)
+  FIRST_NAME                String?                     @db.VarChar(255)
+  MIDDLE_NAME               String?                     @db.VarChar(255)
+  LAST_NAME                 String?                     @db.VarChar(255)
+  REAL_NAME                 String?
+  START_DATE                String?                     @db.VarChar(255)
+  END_DATE                  String?                     @db.VarChar(255)
+  EXPIRE                    String?                     @db.VarChar(255)
+  CONTRACT_NUMBER           String?                     @db.VarChar(255)
+  CONTROLLED                String?                     @db.VarChar(255)
+  PUBLISHER                 String?                     @db.VarChar(255)
+  CLIENT_CODE               String?                     @db.VarChar(255)
+  CLIENT_NAME               String?                     @db.VarChar(255)
+  CLIENT_SHARE              String?                     @db.VarChar(255)
+  CMO_NAME                  String?                     @db.VarChar(255)
+  CMO_CODE                  String?                     @db.VarChar(255)
+  MUMA                      String?                     @db.VarChar(255)
+  createdAt                 DateTime                    @db.Timestamptz(6)
+  updatedAt                 DateTime                    @db.Timestamptz(6)
+  COMPOSER_ID               String?                     @db.VarChar(255)
+  Claim_Composer_Tables     Claim_Composer_Tables[]
+  Client_Composer_Tables    Client_Composer_Tables[]
+  Contract_Composer_Tables  Contract_Composer_Tables[]
+  Publisher_Composer_Tables Publisher_Composer_Tables[]
+  Society_Composer_Tables   Society_Composer_Tables[]
+}
+
+model Master_Contract_Mains {
+  id                       Int                        @id @default(autoincrement())
+  NO                       Int?
+  MAIN_CONTRACT            String?                    @db.VarChar(255)
+  NAME                     String?                    @db.VarChar(255)
+  CONTRACT_TYPE            String?                    @db.VarChar(255)
+  SUB_CONTRACT             String?                    @db.VarChar(255)
+  ACTIVITY                 String?                    @db.VarChar(255)
+  DATE_FROM                String?                    @db.VarChar(255)
+  DATE_TO                  String?                    @db.VarChar(255)
+  TODAY                    String?                    @db.VarChar(255)
+  TOTAL                    String?                    @db.VarChar(255)
+  STATUS                   String?                    @db.VarChar(255)
+  CONTROL                  String?                    @db.VarChar(255)
+  NOTES                    String?                    @db.VarChar(255)
+  LINK                     String?
+  createdAt                DateTime                   @db.Timestamptz(6)
+  updatedAt                DateTime                   @db.Timestamptz(6)
+  Contract_Client_Tables   Contract_Client_Tables[]
+  Contract_Composer_Tables Contract_Composer_Tables[]
+}
+
+model Master_Labels {
+  id                    Int                     @id @default(autoincrement())
+  NO                    Int?
+  CODE                  Int?
+  TYPE                  String?                 @db.VarChar(255)
+  NAME                  String?                 @db.VarChar(255)
+  createdAt             DateTime                @db.Timestamptz(6)
+  updatedAt             DateTime                @db.Timestamptz(6)
+  Label_Song_Tables     Label_Song_Tables[]
+  Teritory_Label_Tables Teritory_Label_Tables[]
+}
+
+model Master_Performer_Mains {
+  id                    Int                     @id @default(autoincrement())
+  PERFORMER             String?                 @db.VarChar(255)
+  FACEBOOK              String?                 @db.VarChar(255)
+  INSTAGRAM             String?                 @db.VarChar(255)
+  SPOTIFY               String?                 @db.VarChar(255)
+  TIKTOK                String?                 @db.VarChar(255)
+  TWITTER               String?                 @db.VarChar(255)
+  YOUTUBE               String?                 @db.VarChar(255)
+  createdAt             DateTime                @db.Timestamptz(6)
+  updatedAt             DateTime                @db.Timestamptz(6)
+  CODE                  String?                 @db.VarChar(255)
+  Performer_Song_Tables Performer_Song_Tables[]
+}
+
+model Master_Product_Mains {
+  id                  Int                   @id @default(autoincrement())
+  CODE                Int?
+  CONTROL             String?               @db.VarChar(255)
+  MMEID               String?               @db.VarChar(255)
+  ARTIST              String?
+  TITLE               String?
+  MAIN                String?               @db.VarChar(255)
+  TOTAL_ISRC          String?
+  TOTAL_ASSET_ID      String?
+  ISWC                String?
+  YT_LINK             String?
+  YT_ASSET_ID         String?
+  UPC                 String?
+  ISRC                String?
+  CWR                 String?               @db.VarChar(255)
+  createdAt           DateTime              @db.Timestamptz(6)
+  updatedAt           DateTime              @db.Timestamptz(6)
+  Song_Product_Tables Song_Product_Tables[]
+}
+
+model Master_Publisher_Mains {
+  id                        Int                         @id @default(autoincrement())
+  NO                        Int?
+  PUBLISHER                 String?                     @db.VarChar(255)
+  CONTROL                   String?                     @db.VarChar(255)
+  CAE_NUMBER                String?                     @db.VarChar(255)
+  TYPE                      String?                     @db.VarChar(255)
+  MUMA                      String?                     @db.VarChar(255)
+  createdAt                 DateTime                    @db.Timestamptz(6)
+  updatedAt                 DateTime                    @db.Timestamptz(6)
+  CODE                      String?                     @db.VarChar(255)
+  Publisher_Composer_Tables Publisher_Composer_Tables[]
+  Teritory_Publisher_Tables Teritory_Publisher_Tables[]
+}
+
+model Master_Society_List_Master_Composers {
+  id                      Int                       @id @default(autoincrement())
+  NO                      Int?
+  COMPOSER_ID             String?                   @db.VarChar(255)
+  IPI_NUMBER              String?                   @db.VarChar(255)
+  START_DATE              String?                   @db.VarChar(255)
+  CLIENT_NAME             String?                   @db.VarChar(255)
+  PUBLISHER               String?                   @db.VarChar(255)
+  CMO_NAME                String?                   @db.VarChar(255)
+  createdAt               DateTime                  @db.Timestamptz(6)
+  updatedAt               DateTime                  @db.Timestamptz(6)
+  Society_Composer_Tables Society_Composer_Tables[]
+  Teritory_Society_Tables Teritory_Society_Tables[]
+}
+
+model Master_Song_Mains {
+  id                    Int                     @id @default(autoincrement())
+  CODE                  Int?
+  CONTROL               String?                 @db.VarChar(255)
+  ISWC                  String?                 @db.VarChar(255)
+  MME_ID                String?                 @db.VarChar(255)
+  ORIGINAL_ARTIST       String?
+  SONG_TITLE            String?
+  COMPOSER              String?
+  MASSIVE_CONTROL       Float?
+  ALBUM_OR_SINGLE       String?                 @db.VarChar(255)
+  TYPE                  String?                 @db.VarChar(255)
+  LANGUAGE              String?                 @db.VarChar(255)
+  VOC_OR_INS            String?                 @db.VarChar(255)
+  DURATION              String?                 @db.VarChar(255)
+  WORK_TYPE             String?                 @db.VarChar(255)
+  RELEASE_DATE          String?                 @db.VarChar(255)
+  RECORD_LABELS         String?                 @db.VarChar(255)
+  CWR                   String?                 @db.VarChar(255)
+  SUBMITTED_DATE        String?                 @db.VarChar(255)
+  createdAt             DateTime                @db.Timestamptz(6)
+  updatedAt             DateTime                @db.Timestamptz(6)
+  Client_Song_Tables    Client_Song_Tables[]
+  Label_Song_Tables     Label_Song_Tables[]
+  Performer_Song_Tables Performer_Song_Tables[]
+  Song_Claim_Tables     Song_Claim_Tables[]
+  Song_Product_Tables   Song_Product_Tables[]
+}
+
+model Master_Source_Of_Incomes {
+  id             Int      @id @default(autoincrement())
+  LABEL_CODE     Int?
+  LABEL_NAME     String?
+  CONTACT_NAME   String?
+  CONTACT_NUMBER String?
+  TERRITORY      String?
+  EMAIL          String?
+  createdAt      DateTime @db.Timestamptz(6)
+  updatedAt      DateTime @db.Timestamptz(6)
+}
+
+model Master_Territory {
+  id                        Int                         @id
+  territory_name            String?                     @db.VarChar(255)
+  Teritory_Label_Tables     Teritory_Label_Tables[]
+  Teritory_Publisher_Tables Teritory_Publisher_Tables[]
+  Teritory_Society_Tables   Teritory_Society_Tables[]
+}
+
+model Performer_Song_Tables {
+  id                     Int                     @id @default(autoincrement())
+  Performer_ID           Int?
+  Song_ID                Int?
+  createdAt              DateTime                @db.Timestamptz(6)
+  updatedAt              DateTime                @db.Timestamptz(6)
+  Master_Performer_Mains Master_Performer_Mains? @relation(fields: [Performer_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ARTIST_ID")
+  Master_Song_Mains      Master_Song_Mains?      @relation(fields: [Song_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "SONGS_ID")
+}
+
+model Publisher_Composer_Tables {
+  id                     Int                     @id @default(autoincrement())
+  Publisher_ID           Int?
+  Composer_ID            Int?
+  createdAt              DateTime                @db.Timestamptz(6)
+  updatedAt              DateTime                @db.Timestamptz(6)
+  Master_Composer_Mains  Master_Composer_Mains?  @relation(fields: [Composer_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "COMPOSER_ID")
+  Master_Publisher_Mains Master_Publisher_Mains? @relation(fields: [Publisher_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "PUBLISHER_ID")
+}
+
+model RoleData {
+  id        Int      @id @default(autoincrement())
+  name_role String?  @db.VarChar(255)
+  type_role String?  @db.VarChar(255)
+  createdAt DateTime @db.Timestamptz(6)
+  updatedAt DateTime @db.Timestamptz(6)
+}
+
+model SequelizeMeta {
+  name String @id @db.VarChar(255)
+}
+
+model Society_Composer_Tables {
+  id                                   Int                                   @id @default(autoincrement())
+  Society_ID                           Int?
+  Composer_ID                          Int?
+  createdAt                            DateTime                              @db.Timestamptz(6)
+  updatedAt                            DateTime                              @db.Timestamptz(6)
+  Master_Composer_Mains                Master_Composer_Mains?                @relation(fields: [Composer_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "COMPOSER_ID")
+  Master_Society_List_Master_Composers Master_Society_List_Master_Composers? @relation(fields: [Society_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "SOCIETY_ID")
+}
+
+model Song_Claim_Tables {
+  id                 Int                 @id @default(autoincrement())
+  Song_ID            Int?
+  Claim_ID           Int?
+  createdAt          DateTime            @db.Timestamptz(6)
+  updatedAt          DateTime            @db.Timestamptz(6)
+  Master_Claim_Mains Master_Claim_Mains? @relation(fields: [Claim_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "CLAIM_ID")
+  Master_Song_Mains  Master_Song_Mains?  @relation(fields: [Song_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "SONGS_ID")
+}
+
+model Song_Product_Tables {
+  id                   Int                   @id @default(autoincrement())
+  Song_ID              Int?
+  Product_ID           Int?
+  createdAt            DateTime              @db.Timestamptz(6)
+  updatedAt            DateTime              @db.Timestamptz(6)
+  Master_Product_Mains Master_Product_Mains? @relation(fields: [Product_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "PRODUCT_ID")
+  Master_Song_Mains    Master_Song_Mains?    @relation(fields: [Song_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "SONGS_ID")
+}
+
+model Teritory_Label_Tables {
+  id               Int               @id @default(autoincrement())
+  Teritory_ID      Int?
+  Label_ID         Int?
+  createdAt        DateTime          @db.Timestamptz(6)
+  updatedAt        DateTime          @db.Timestamptz(6)
+  Master_Labels    Master_Labels?    @relation(fields: [Label_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "LABEL_ID")
+  Master_Territory Master_Territory? @relation(fields: [Teritory_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "TERRITORY_ID")
+}
+
+model Teritory_Publisher_Tables {
+  id                     Int                     @id @default(autoincrement())
+  Teritory_ID            Int?
+  Publisher_ID           Int?
+  createdAt              DateTime                @db.Timestamptz(6)
+  updatedAt              DateTime                @db.Timestamptz(6)
+  Master_Publisher_Mains Master_Publisher_Mains? @relation(fields: [Publisher_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "PUBLISHER_ID")
+  Master_Territory       Master_Territory?       @relation(fields: [Teritory_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "TERRITORY_ID")
+}
+
+model Teritory_Society_Tables {
+  id                                   Int                                   @id @default(autoincrement())
+  Teritory_ID                          Int?
+  Society_ID                           Int?
+  createdAt                            DateTime                              @db.Timestamptz(6)
+  updatedAt                            DateTime                              @db.Timestamptz(6)
+  Master_Society_List_Master_Composers Master_Society_List_Master_Composers? @relation(fields: [Society_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "SOCIETY_ID")
+  Master_Territory                     Master_Territory?                     @relation(fields: [Teritory_ID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "TERRITORY_ID")
+}
+
+model Users {
+  id          Int      @id @default(autoincrement())
+  firstname   String?  @db.VarChar(255)
+  lastname    String?  @db.VarChar(255)
+  email       String?  @db.VarChar(255)
+  password    String?  @db.VarChar(255)
+  password2   String?  @db.VarChar(255)
+  fullname    String?  @db.VarChar(255)
+  phonenumber String?  @db.VarChar(255)
+  username    String?  @db.VarChar(255)
+  type        String?  @db.VarChar(255)
+  createdAt   DateTime @db.Timestamptz(6)
+  updatedAt   DateTime @db.Timestamptz(6)
+}
+
+model directus_activity {
+  id                 Int                  @id @default(autoincrement())
+  action             String               @db.VarChar(45)
+  user               String?              @db.Uuid
+  timestamp          DateTime             @default(now()) @db.Timestamptz(6)
+  ip                 String?              @db.VarChar(50)
+  user_agent         String?              @db.VarChar(255)
+  collection         String               @db.VarChar(64)
+  item               String               @db.VarChar(255)
+  comment            String?
+  origin             String?              @db.VarChar(255)
+  directus_revisions directus_revisions[]
+}
+
+model directus_collections {
+  collection                 String                 @id @db.VarChar(64)
+  icon                       String?                @db.VarChar(30)
+  note                       String?
+  display_template           String?                @db.VarChar(255)
+  hidden                     Boolean                @default(false)
+  singleton                  Boolean                @default(false)
+  translations               Json?                  @db.Json
+  archive_field              String?                @db.VarChar(64)
+  archive_app_filter         Boolean                @default(true)
+  archive_value              String?                @db.VarChar(255)
+  unarchive_value            String?                @db.VarChar(255)
+  sort_field                 String?                @db.VarChar(64)
+  accountability             String?                @default("all") @db.VarChar(255)
+  color                      String?                @db.VarChar(255)
+  item_duplication_fields    Json?                  @db.Json
+  sort                       Int?
+  group                      String?                @db.VarChar(64)
+  collapse                   String                 @default("open") @db.VarChar(255)
+  preview_url                String?                @db.VarChar(255)
+  versioning                 Boolean                @default(false)
+  directus_collections       directus_collections?  @relation("directus_collectionsTodirectus_collections", fields: [group], references: [collection], onDelete: NoAction, onUpdate: NoAction, map: "directus_collections_group_foreign")
+  other_directus_collections directus_collections[] @relation("directus_collectionsTodirectus_collections")
+  directus_shares            directus_shares[]
+  directus_versions          directus_versions[]
+}
+
+model directus_dashboards {
+  id              String            @id @db.Uuid
+  name            String            @db.VarChar(255)
+  icon            String            @default("dashboard") @db.VarChar(30)
+  note            String?
+  date_created    DateTime?         @default(now()) @db.Timestamptz(6)
+  user_created    String?           @db.Uuid
+  color           String?           @db.VarChar(255)
+  directus_users  directus_users?   @relation(fields: [user_created], references: [id], onUpdate: NoAction, map: "directus_dashboards_user_created_foreign")
+  directus_panels directus_panels[]
+}
+
+model directus_extensions {
+  name    String  @id @db.VarChar(255)
+  enabled Boolean @default(true)
+}
+
+model directus_fields {
+  id                 Int      @id @default(autoincrement())
+  collection         String   @db.VarChar(64)
+  field              String   @db.VarChar(64)
+  special            String?  @db.VarChar(64)
+  interface          String?  @db.VarChar(64)
+  options            Json?    @db.Json
+  display            String?  @db.VarChar(64)
+  display_options    Json?    @db.Json
+  readonly           Boolean  @default(false)
+  hidden             Boolean  @default(false)
+  sort               Int?
+  width              String?  @default("full") @db.VarChar(30)
+  translations       Json?    @db.Json
+  note               String?
+  conditions         Json?    @db.Json
+  required           Boolean? @default(false)
+  group              String?  @db.VarChar(64)
+  validation         Json?    @db.Json
+  validation_message String?
+}
+
+model directus_files {
+  id                                                                    String              @id @db.Uuid
+  storage                                                               String              @db.VarChar(255)
+  filename_disk                                                         String?             @db.VarChar(255)
+  filename_download                                                     String              @db.VarChar(255)
+  title                                                                 String?             @db.VarChar(255)
+  type                                                                  String?             @db.VarChar(255)
+  folder                                                                String?             @db.Uuid
+  uploaded_by                                                           String?             @db.Uuid
+  uploaded_on                                                           DateTime            @default(now()) @db.Timestamptz(6)
+  modified_by                                                           String?             @db.Uuid
+  modified_on                                                           DateTime            @default(now()) @db.Timestamptz(6)
+  charset                                                               String?             @db.VarChar(50)
+  filesize                                                              BigInt?
+  width                                                                 Int?
+  height                                                                Int?
+  duration                                                              Int?
+  embed                                                                 String?             @db.VarChar(200)
+  description                                                           String?
+  location                                                              String?
+  tags                                                                  String?
+  metadata                                                              Json?               @db.Json
+  directus_folders                                                      directus_folders?   @relation(fields: [folder], references: [id], onUpdate: NoAction, map: "directus_files_folder_foreign")
+  directus_users_directus_files_modified_byTodirectus_users             directus_users?     @relation("directus_files_modified_byTodirectus_users", fields: [modified_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "directus_files_modified_by_foreign")
+  directus_users_directus_files_uploaded_byTodirectus_users             directus_users?     @relation("directus_files_uploaded_byTodirectus_users", fields: [uploaded_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "directus_files_uploaded_by_foreign")
+  directus_settings_directus_settings_project_logoTodirectus_files      directus_settings[] @relation("directus_settings_project_logoTodirectus_files")
+  directus_settings_directus_settings_public_backgroundTodirectus_files directus_settings[] @relation("directus_settings_public_backgroundTodirectus_files")
+  directus_settings_directus_settings_public_faviconTodirectus_files    directus_settings[] @relation("directus_settings_public_faviconTodirectus_files")
+  directus_settings_directus_settings_public_foregroundTodirectus_files directus_settings[] @relation("directus_settings_public_foregroundTodirectus_files")
+}
+
+model directus_flows {
+  id                  String                @id @db.Uuid
+  name                String                @db.VarChar(255)
+  icon                String?               @db.VarChar(30)
+  color               String?               @db.VarChar(255)
+  description         String?
+  status              String                @default("active") @db.VarChar(255)
+  trigger             String?               @db.VarChar(255)
+  accountability      String?               @default("all") @db.VarChar(255)
+  options             Json?                 @db.Json
+  operation           String?               @unique(map: "directus_flows_operation_unique") @db.Uuid
+  date_created        DateTime?             @default(now()) @db.Timestamptz(6)
+  user_created        String?               @db.Uuid
+  directus_users      directus_users?       @relation(fields: [user_created], references: [id], onUpdate: NoAction, map: "directus_flows_user_created_foreign")
+  directus_operations directus_operations[]
+}
+
+model directus_folders {
+  id                     String              @id @db.Uuid
+  name                   String              @db.VarChar(255)
+  parent                 String?             @db.Uuid
+  directus_files         directus_files[]
+  directus_folders       directus_folders?   @relation("directus_foldersTodirectus_folders", fields: [parent], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "directus_folders_parent_foreign")
+  other_directus_folders directus_folders[]  @relation("directus_foldersTodirectus_folders")
+  directus_settings      directus_settings[]
+}
+
+model directus_migrations {
+  version   String    @id @db.VarChar(255)
+  name      String    @db.VarChar(255)
+  timestamp DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model directus_notifications {
+  id                                                              Int             @id @default(autoincrement())
+  timestamp                                                       DateTime?       @default(now()) @db.Timestamptz(6)
+  status                                                          String?         @default("inbox") @db.VarChar(255)
+  recipient                                                       String          @db.Uuid
+  sender                                                          String?         @db.Uuid
+  subject                                                         String          @db.VarChar(255)
+  message                                                         String?
+  collection                                                      String?         @db.VarChar(64)
+  item                                                            String?         @db.VarChar(255)
+  directus_users_directus_notifications_recipientTodirectus_users directus_users  @relation("directus_notifications_recipientTodirectus_users", fields: [recipient], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "directus_notifications_recipient_foreign")
+  directus_users_directus_notifications_senderTodirectus_users    directus_users? @relation("directus_notifications_senderTodirectus_users", fields: [sender], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "directus_notifications_sender_foreign")
+}
+
+model directus_operations {
+  id                                                                         String               @id @db.Uuid
+  name                                                                       String?              @db.VarChar(255)
+  key                                                                        String               @db.VarChar(255)
+  type                                                                       String               @db.VarChar(255)
+  position_x                                                                 Int
+  position_y                                                                 Int
+  options                                                                    Json?                @db.Json
+  resolve                                                                    String?              @unique(map: "directus_operations_resolve_unique") @db.Uuid
+  reject                                                                     String?              @unique(map: "directus_operations_reject_unique") @db.Uuid
+  flow                                                                       String               @db.Uuid
+  date_created                                                               DateTime?            @default(now()) @db.Timestamptz(6)
+  user_created                                                               String?              @db.Uuid
+  directus_flows                                                             directus_flows       @relation(fields: [flow], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "directus_operations_flow_foreign")
+  directus_operations_directus_operations_rejectTodirectus_operations        directus_operations? @relation("directus_operations_rejectTodirectus_operations", fields: [reject], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "directus_operations_reject_foreign")
+  other_directus_operations_directus_operations_rejectTodirectus_operations  directus_operations? @relation("directus_operations_rejectTodirectus_operations")
+  directus_operations_directus_operations_resolveTodirectus_operations       directus_operations? @relation("directus_operations_resolveTodirectus_operations", fields: [resolve], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "directus_operations_resolve_foreign")
+  other_directus_operations_directus_operations_resolveTodirectus_operations directus_operations? @relation("directus_operations_resolveTodirectus_operations")
+  directus_users                                                             directus_users?      @relation(fields: [user_created], references: [id], onUpdate: NoAction, map: "directus_operations_user_created_foreign")
+}
+
+model directus_panels {
+  id                  String              @id @db.Uuid
+  dashboard           String              @db.Uuid
+  name                String?             @db.VarChar(255)
+  icon                String?             @db.VarChar(30)
+  color               String?             @db.VarChar(10)
+  show_header         Boolean             @default(false)
+  note                String?
+  type                String              @db.VarChar(255)
+  position_x          Int
+  position_y          Int
+  width               Int
+  height              Int
+  options             Json?               @db.Json
+  date_created        DateTime?           @default(now()) @db.Timestamptz(6)
+  user_created        String?             @db.Uuid
+  directus_dashboards directus_dashboards @relation(fields: [dashboard], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "directus_panels_dashboard_foreign")
+  directus_users      directus_users?     @relation(fields: [user_created], references: [id], onUpdate: NoAction, map: "directus_panels_user_created_foreign")
+}
+
+model directus_permissions {
+  id             Int             @id @default(autoincrement())
+  role           String?         @db.Uuid
+  collection     String          @db.VarChar(64)
+  action         String          @db.VarChar(10)
+  permissions    Json?           @db.Json
+  validation     Json?           @db.Json
+  presets        Json?           @db.Json
+  fields         String?
+  directus_roles directus_roles? @relation(fields: [role], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "directus_permissions_role_foreign")
+}
+
+model directus_presets {
+  id               Int             @id @default(autoincrement())
+  bookmark         String?         @db.VarChar(255)
+  user             String?         @db.Uuid
+  role             String?         @db.Uuid
+  collection       String?         @db.VarChar(64)
+  search           String?         @db.VarChar(100)
+  layout           String?         @default("tabular") @db.VarChar(100)
+  layout_query     Json?           @db.Json
+  layout_options   Json?           @db.Json
+  refresh_interval Int?
+  filter           Json?           @db.Json
+  icon             String?         @default("bookmark") @db.VarChar(30)
+  color            String?         @db.VarChar(255)
+  directus_roles   directus_roles? @relation(fields: [role], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "directus_presets_role_foreign")
+  directus_users   directus_users? @relation(fields: [user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "directus_presets_user_foreign")
+}
+
+model directus_relations {
+  id                      Int     @id @default(autoincrement())
+  many_collection         String  @db.VarChar(64)
+  many_field              String  @db.VarChar(64)
+  one_collection          String? @db.VarChar(64)
+  one_field               String? @db.VarChar(64)
+  one_collection_field    String? @db.VarChar(64)
+  one_allowed_collections String?
+  junction_field          String? @db.VarChar(64)
+  sort_field              String? @db.VarChar(64)
+  one_deselect_action     String  @default("nullify") @db.VarChar(255)
+}
+
+model directus_revisions {
+  id                       Int                  @id @default(autoincrement())
+  activity                 Int
+  collection               String               @db.VarChar(64)
+  item                     String               @db.VarChar(255)
+  data                     Json?                @db.Json
+  delta                    Json?                @db.Json
+  parent                   Int?
+  version                  String?              @db.Uuid
+  directus_activity        directus_activity    @relation(fields: [activity], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "directus_revisions_activity_foreign")
+  directus_revisions       directus_revisions?  @relation("directus_revisionsTodirectus_revisions", fields: [parent], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "directus_revisions_parent_foreign")
+  other_directus_revisions directus_revisions[] @relation("directus_revisionsTodirectus_revisions")
+  directus_versions        directus_versions?   @relation(fields: [version], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "directus_revisions_version_foreign")
+}
+
+model directus_roles {
+  id                   String                 @id @db.Uuid
+  name                 String                 @db.VarChar(100)
+  icon                 String                 @default("supervised_user_circle") @db.VarChar(30)
+  description          String?
+  ip_access            String?
+  enforce_tfa          Boolean                @default(false)
+  admin_access         Boolean                @default(false)
+  app_access           Boolean                @default(true)
+  directus_permissions directus_permissions[]
+  directus_presets     directus_presets[]
+  directus_shares      directus_shares[]
+  directus_users       directus_users[]
+}
+
+model directus_sessions {
+  token           String           @id @db.VarChar(64)
+  user            String?          @db.Uuid
+  expires         DateTime         @db.Timestamptz(6)
+  ip              String?          @db.VarChar(255)
+  user_agent      String?          @db.VarChar(255)
+  share           String?          @db.Uuid
+  origin          String?          @db.VarChar(255)
+  directus_shares directus_shares? @relation(fields: [share], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "directus_sessions_share_foreign")
+  directus_users  directus_users?  @relation(fields: [user], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "directus_sessions_user_foreign")
+}
+
+model directus_settings {
+  id                                                                 Int               @id @default(autoincrement())
+  project_name                                                       String            @default("Directus") @db.VarChar(100)
+  project_url                                                        String?           @db.VarChar(255)
+  project_color                                                      String            @default("#6644FF") @db.VarChar(255)
+  project_logo                                                       String?           @db.Uuid
+  public_foreground                                                  String?           @db.Uuid
+  public_background                                                  String?           @db.Uuid
+  public_note                                                        String?
+  auth_login_attempts                                                Int?              @default(25)
+  auth_password_policy                                               String?           @db.VarChar(100)
+  storage_asset_transform                                            String?           @default("all") @db.VarChar(7)
+  storage_asset_presets                                              Json?             @db.Json
+  custom_css                                                         String?
+  storage_default_folder                                             String?           @db.Uuid
+  basemaps                                                           Json?             @db.Json
+  mapbox_key                                                         String?           @db.VarChar(255)
+  module_bar                                                         Json?             @db.Json
+  project_descriptor                                                 String?           @db.VarChar(100)
+  default_language                                                   String            @default("en-US") @db.VarChar(255)
+  custom_aspect_ratios                                               Json?             @db.Json
+  public_favicon                                                     String?           @db.Uuid
+  default_appearance                                                 String            @default("auto") @db.VarChar(255)
+  default_theme_light                                                String?           @db.VarChar(255)
+  theme_light_overrides                                              Json?             @db.Json
+  default_theme_dark                                                 String?           @db.VarChar(255)
+  theme_dark_overrides                                               Json?             @db.Json
+  directus_files_directus_settings_project_logoTodirectus_files      directus_files?   @relation("directus_settings_project_logoTodirectus_files", fields: [project_logo], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "directus_settings_project_logo_foreign")
+  directus_files_directus_settings_public_backgroundTodirectus_files directus_files?   @relation("directus_settings_public_backgroundTodirectus_files", fields: [public_background], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "directus_settings_public_background_foreign")
+  directus_files_directus_settings_public_faviconTodirectus_files    directus_files?   @relation("directus_settings_public_faviconTodirectus_files", fields: [public_favicon], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "directus_settings_public_favicon_foreign")
+  directus_files_directus_settings_public_foregroundTodirectus_files directus_files?   @relation("directus_settings_public_foregroundTodirectus_files", fields: [public_foreground], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "directus_settings_public_foreground_foreign")
+  directus_folders                                                   directus_folders? @relation(fields: [storage_default_folder], references: [id], onUpdate: NoAction, map: "directus_settings_storage_default_folder_foreign")
+}
+
+model directus_shares {
+  id                   String               @id @db.Uuid
+  name                 String?              @db.VarChar(255)
+  collection           String               @db.VarChar(64)
+  item                 String               @db.VarChar(255)
+  role                 String?              @db.Uuid
+  password             String?              @db.VarChar(255)
+  user_created         String?              @db.Uuid
+  date_created         DateTime?            @default(now()) @db.Timestamptz(6)
+  date_start           DateTime?            @db.Timestamptz(6)
+  date_end             DateTime?            @db.Timestamptz(6)
+  times_used           Int?                 @default(0)
+  max_uses             Int?
+  directus_sessions    directus_sessions[]
+  directus_collections directus_collections @relation(fields: [collection], references: [collection], onDelete: Cascade, onUpdate: NoAction, map: "directus_shares_collection_foreign")
+  directus_roles       directus_roles?      @relation(fields: [role], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "directus_shares_role_foreign")
+  directus_users       directus_users?      @relation(fields: [user_created], references: [id], onUpdate: NoAction, map: "directus_shares_user_created_foreign")
+}
+
+model directus_translations {
+  id       String @id @db.Uuid
+  language String @db.VarChar(255)
+  key      String @db.VarChar(255)
+  value    String
+}
+
+model directus_users {
+  id                                                                      String                   @id @db.Uuid
+  first_name                                                              String?                  @db.VarChar(50)
+  last_name                                                               String?                  @db.VarChar(50)
+  email                                                                   String?                  @unique(map: "directus_users_email_unique") @db.VarChar(128)
+  password                                                                String?                  @db.VarChar(255)
+  location                                                                String?                  @db.VarChar(255)
+  title                                                                   String?                  @db.VarChar(50)
+  description                                                             String?
+  tags                                                                    Json?                    @db.Json
+  avatar                                                                  String?                  @db.Uuid
+  language                                                                String?                  @db.VarChar(255)
+  tfa_secret                                                              String?                  @db.VarChar(255)
+  status                                                                  String                   @default("active") @db.VarChar(16)
+  role                                                                    String?                  @db.Uuid
+  token                                                                   String?                  @unique(map: "directus_users_token_unique") @db.VarChar(255)
+  last_access                                                             DateTime?                @db.Timestamptz(6)
+  last_page                                                               String?                  @db.VarChar(255)
+  provider                                                                String                   @default("default") @db.VarChar(128)
+  external_identifier                                                     String?                  @unique(map: "directus_users_external_identifier_unique") @db.VarChar(255)
+  auth_data                                                               Json?                    @db.Json
+  email_notifications                                                     Boolean?                 @default(true)
+  appearance                                                              String?                  @db.VarChar(255)
+  theme_dark                                                              String?                  @db.VarChar(255)
+  theme_light                                                             String?                  @db.VarChar(255)
+  theme_light_overrides                                                   Json?                    @db.Json
+  theme_dark_overrides                                                    Json?                    @db.Json
+  directus_dashboards                                                     directus_dashboards[]
+  directus_files_directus_files_modified_byTodirectus_users               directus_files[]         @relation("directus_files_modified_byTodirectus_users")
+  directus_files_directus_files_uploaded_byTodirectus_users               directus_files[]         @relation("directus_files_uploaded_byTodirectus_users")
+  directus_flows                                                          directus_flows[]
+  directus_notifications_directus_notifications_recipientTodirectus_users directus_notifications[] @relation("directus_notifications_recipientTodirectus_users")
+  directus_notifications_directus_notifications_senderTodirectus_users    directus_notifications[] @relation("directus_notifications_senderTodirectus_users")
+  directus_operations                                                     directus_operations[]
+  directus_panels                                                         directus_panels[]
+  directus_presets                                                        directus_presets[]
+  directus_sessions                                                       directus_sessions[]
+  directus_shares                                                         directus_shares[]
+  directus_roles                                                          directus_roles?          @relation(fields: [role], references: [id], onUpdate: NoAction, map: "directus_users_role_foreign")
+  directus_versions_directus_versions_user_createdTodirectus_users        directus_versions[]      @relation("directus_versions_user_createdTodirectus_users")
+  directus_versions_directus_versions_user_updatedTodirectus_users        directus_versions[]      @relation("directus_versions_user_updatedTodirectus_users")
+}
+
+model directus_versions {
+  id                                                            String               @id @db.Uuid
+  key                                                           String               @db.VarChar(64)
+  name                                                          String?              @db.VarChar(255)
+  collection                                                    String               @db.VarChar(64)
+  item                                                          String               @db.VarChar(255)
+  hash                                                          String?              @db.VarChar(255)
+  date_created                                                  DateTime?            @default(now()) @db.Timestamptz(6)
+  date_updated                                                  DateTime?            @default(now()) @db.Timestamptz(6)
+  user_created                                                  String?              @db.Uuid
+  user_updated                                                  String?              @db.Uuid
+  directus_revisions                                            directus_revisions[]
+  directus_collections                                          directus_collections @relation(fields: [collection], references: [collection], onDelete: Cascade, onUpdate: NoAction, map: "directus_versions_collection_foreign")
+  directus_users_directus_versions_user_createdTodirectus_users directus_users?      @relation("directus_versions_user_createdTodirectus_users", fields: [user_created], references: [id], onUpdate: NoAction, map: "directus_versions_user_created_foreign")
+  directus_users_directus_versions_user_updatedTodirectus_users directus_users?      @relation("directus_versions_user_updatedTodirectus_users", fields: [user_updated], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "directus_versions_user_updated_foreign")
+}
+
+model directus_webhooks {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar(255)
+  method      String  @default("POST") @db.VarChar(10)
+  url         String  @db.VarChar(255)
+  status      String  @default("active") @db.VarChar(10)
+  data        Boolean @default(true)
+  actions     String  @db.VarChar(100)
+  collections String  @db.VarChar(255)
+  headers     Json?   @db.Json
 }
